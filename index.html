@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitUnlock | Генератор ключей</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/serezanet2/Gitmoder/main/favicon.ico" type="image/x-icon">
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+            background: linear-gradient(-45deg, #000000, #333333, #666666);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        body.main-menu {
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+        }
+
+        body.light-theme {
+            color: #333;
+            background: linear-gradient(-45deg, #f5f5f5, #e0e0e0, #cccccc);
+        }
+
+        body.light-theme.main-menu {
+            background: linear-gradient(-45deg, #d5d5f5, #c5c5e5, #b5b5d5);
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Контейнер меню */
+        .menu-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        body.light-theme .menu-container {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Анимации меню */
+        .menu {
+            position: absolute;
+            width: calc(100% - 60px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .menu-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(100%);
+        }
+
+        .menu-active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(0);
+        }
+
+        /* Стили для списка ключей */
+        .key-container {
+            width: 100%;
+            max-height: 60vh;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding-right: 10px;
+        }
+
+        .key-header {
+            background: rgba(123, 31, 162, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            animation: fadeIn 0.5s ease;
+        }
+
+        body.light-theme .key-header {
+            background: rgba(123, 31, 162, 0.2);
+        }
+
+        .key-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .key-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body.light-theme .key-item {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .key-text {
+            font-family: monospace;
+            word-break: break-all;
+            flex: 1;
+            text-align: left;
+            padding-right: 15px;
+        }
+
+        .key-timer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 120px;
+            text-align: right;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+
+        .key-timer:hover {
+            transform: scale(1.05);
+        }
+
+        .key-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Кнопки */
+        button {
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #7b1fa2, #4a148c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #8e24aa, #5c1a8a);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #2e7d32, #1b5e20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(45deg, #388e3c, #237d31);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Кнопки действий */
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 16px;
+        }
+
+        .copy-btn {
+            background: #4285f4;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background: #3367d6;
+            transform: scale(1.1);
+        }
+
+        .delete-btn {
+            background: white;
+            color: #333;
+        }
+
+        .delete-btn:hover {
+            background: #ff4444;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Кнопки навигации */
+        .nav-btn {
+            position: fixed;
+            top: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(123, 31, 162, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .theme-btn {
+            right: 20px;
+        }
+
+        .theme-btn:hover {
+            transform: rotate(30deg) scale(1.1);
+        }
+
+        .home-btn {
+            left: 20px;
+        }
+
+        .home-btn:hover {
+            transform: translateX(-3px);
+        }
+
+        /* Меню скриптов */
+        .script-container {
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .script-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px 5px 0 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+            text-align: left;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        body.light-theme .script-code {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .script-copy-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 0 0 5px 5px;
+            background: linear-gradient(45deg, #7b1fa2, #4a148c);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
+        }
+
+        .script-copy-btn:hover {
+            background: linear-gradient(45deg, #8e24aa, #5c1a8a);
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+        .string {
+            color: #ce9178;
+        }
+        .function {
+            color: #dcdcaa;
+        }
+
+        /* Заголовок */
+        .app-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #7b1fa2, #1976d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease infinite;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 10px rgba(123, 31, 162, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(25, 118, 210, 0.8); }
+            100% { text-shadow: 0 0 10px rgba(123, 31, 162, 0.5); }
+        }
+
+        /* Скроллбар */
+        .key-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .key-container::-webkit-scrollbar-thumb {
+            background: rgba(123, 31, 162, 0.5);
+            border-radius: 4px;
+        }
+
+        /* Уведомления */
+        .notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
+            transition: transform 0.3s ease-out;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        body.light-theme .notification {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.hide {
+            transform: translateX(120%);
+        }
+
+        @keyframes progress {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0 0 0 10px;
+            animation: progress 5s linear forwards;
+        }
+
+        body.light-theme .notification-progress {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Уведомления -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Кнопки навигации -->
+    <div class="nav-btn theme-btn" id="themeBtn">☀️</div>
+    <div class="nav-btn home-btn" id="homeBtn">⌂</div>
+
+    <!-- Основное меню -->
+    <div class="menu-container">
+        <!-- Начальное меню -->
+        <div id="initialMenu" class="menu menu-active">
+            <h1 class="app-title">GitUnlock</h1>
+            <div class="btn-group">
+                <button class="btn-primary" id="gitmoderMenuBtn">Gitmoder</button>
+            </div>
+        </div>
+
+        <!-- Меню Gitmoder -->
+        <div id="gitmoderMenu" class="menu menu-hidden">
+            <div class="key-header">Ключи Gitmoder</div>
+            <div class="key-container" id="gitmoderKeysList">
+                <!-- Ключи будут добавляться сюда -->
+            </div>
+            
+            <!-- Скрипт Gitmoder -->
+            <div id="gitmoderScript" class="script-container" style="display: none;">
+                <div class="script-code">
+                    <span class="function">loadstring</span>(<span class="function">game</span>:<span class="function">HttpGet</span>(<span class="string">'https://raw.githubusercontent.com/serezanet2/Gitmoder/refs/heads/main/Gitmoder_LOADER'</span>))()
+                </div>
+                <button class="script-copy-btn" onclick="copyScriptToClipboard()">Скопировать скрипт</button>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn-primary" id="generateGitmoderKey">Новый ключ</button>
+                <button class="btn-success" id="showGitmoderScriptBtn">Показать скрипт</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let keys = [];
+        let scriptVisible = false;
+        let generatedKeys = new Set();
+        let notificationId = 0;
+
+        // Инициализация при загрузке
+        window.onload = function() {
+            // Загрузка темы
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeBtn').textContent = '🌙';
+            }
+            
+            // Загрузка ключей
+            loadKeys();
+            
+            // Назначение обработчиков событий
+            document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+            document.getElementById('homeBtn').addEventListener('click', showInitialMenu);
+            document.getElementById('gitmoderMenuBtn').addEventListener('click', showGitmoderMenu);
+            document.getElementById('generateGitmoderKey').addEventListener('click', generateKey);
+            document.getElementById('showGitmoderScriptBtn').addEventListener('click', toggleScript);
+        };
+
+        // Генерация уникального ключа
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            let attempts = 0;
+            const maxAttempts = 100;
+            
+            do {
+                key = '';
+                for (let i = 0; i < 20; i++) {
+                    key += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                key = key.match(/.{1,5}/g).join('-');
+                attempts++;
+                
+                if (attempts >= maxAttempts) {
+                    showNotification('Не удалось сгенерировать уникальный ключ');
+                    return;
+                }
+            } while (generatedKeys.has(key));
+            
+            generatedKeys.add(key);
+            
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 2);
+            
+            const keyData = {
+                key: key,
+                expiration: expirationDate.getTime(),
+                deviceId: getDeviceId()
+            };
+            
+            keys.unshift(keyData);
+            saveKeys();
+            renderKeys();
+            
+            // Прокрутка к новому ключу
+            const keysList = document.getElementById('gitmoderKeysList');
+            keysList.scrollTop = 0;
+            
+            showNotification('Ключ успешно сгенерирован');
+        }
+
+        // Получение уникального идентификатора устройства
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('deviceId');
+            if (!deviceId) {
+                deviceId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+                localStorage.setItem('deviceId', deviceId);
+            }
+            return deviceId;
+        }
+
+        // Сохранение ключей
+        function saveKeys() {
+            localStorage.setItem('savedKeys', JSON.stringify(keys));
+            
+            // Сохраняем также сгенерированные ключи для проверки уникальности
+            const allKeys = keys.map(k => k.key);
+            localStorage.setItem('generatedKeys', JSON.stringify(Array.from(generatedKeys)));
+        }
+
+        // Загрузка ключей
+        function loadKeys() {
+            const savedKeys = localStorage.getItem('savedKeys');
+            if (savedKeys) {
+                keys = JSON.parse(savedKeys);
+                
+                // Восстанавливаем сгенерированные ключи
+                const savedGeneratedKeys = localStorage.getItem('generatedKeys');
+                if (savedGeneratedKeys) {
+                    generatedKeys = new Set(JSON.parse(savedGeneratedKeys));
+                } else {
+                    // Если нет сохраненных сгенерированных ключей, создаем из текущих
+                    keys.forEach(keyData => {
+                        generatedKeys.add(keyData.key);
+                    });
+                }
+                
+                renderKeys();
+            }
+        }
+
+        // Отрисовка ключей (максимум 4)
+        function renderKeys() {
+            const keysList = document.getElementById('gitmoderKeysList');
+            keysList.innerHTML = '';
+            
+            if (keys.length === 0) {
+                keysList.innerHTML = '<div class="key-item" style="justify-content: center;">Нет активных ключей</div>';
+                return;
+            }
+            
+            // Показываем только первые 4 ключа
+            const keysToShow = keys.slice(0, 4);
+            
+            keysToShow.forEach((keyData, index) => {
+                const keyElement = document.createElement('div');
+                keyElement.className = 'key-item';
+                keyElement.innerHTML = `
+                    <div class="key-text">${keyData.key}</div>
+                    <div class="key-timer" id="timer-${index}">Загрузка...</div>
+                    <div class="key-actions">
+                        <button class="action-btn copy-btn" onclick="copyToClipboard('${keyData.key}')">⎘</button>
+                        <button class="action-btn delete-btn" onclick="deleteKey(${index})">🗑️</button>
+                    </div>
+                `;
+                keysList.appendChild(keyElement);
+                
+                updateKeyTimer(index, keyData.expiration);
+            });
+        }
+
+        // Обновление таймеров ключей
+        function updateKeyTimer(index, expirationTime) {
+            const timerElement = document.getElementById(`timer-${index}`);
+            if (!timerElement) return;
+            
+            function update() {
+                const now = new Date().getTime();
+                const diff = expirationTime - now;
+                
+                if (diff <= 0) {
+                    timerElement.textContent = 'Истек';
+                    keys = keys.filter(k => k.expiration > now);
+                    saveKeys();
+                    renderKeys();
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                timerElement.textContent = `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+            }
+            
+            update();
+            const intervalId = setInterval(update, 1000);
+            timerElement.dataset.intervalId = intervalId;
+        }
+
+        // Переключение темы
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+            showNotification(isLight ? 'Светлая тема включена' : 'Тёмная тема включена');
+        }
+
+        // Показать начальное меню с анимацией
+        function showInitialMenu() {
+            document.body.classList.remove('main-menu');
+            
+            const initialMenu = document.getElementById('initialMenu');
+            const gitmoderMenu = document.getElementById('gitmoderMenu');
+            
+            gitmoderMenu.classList.remove('menu-active');
+            gitmoderMenu.classList.add('menu-hidden');
+            
+            initialMenu.classList.remove('menu-hidden');
+            initialMenu.classList.add('menu-active');
+            
+            // Скрыть скрипт при возврате
+            document.getElementById('gitmoderScript').style.display = 'none';
+            scriptVisible = false;
+            document.getElementById('showGitmoderScriptBtn').textContent = 'Показать скрипт';
+        }
+
+        // Показать меню Gitmoder с анимацией
+        function showGitmoderMenu() {
+            document.body.classList.add('main-menu');
+            
+            const initialMenu = document.getElementById('initialMenu');
+            const gitmoderMenu = document.getElementById('gitmoderMenu');
+            
+            initialMenu.classList.remove('menu-active');
+            initialMenu.classList.add('menu-hidden');
+            
+            gitmoderMenu.classList.remove('menu-hidden');
+            gitmoderMenu.classList.add('menu-active');
+        }
+
+        // Переключить отображение скрипта с анимацией
+        function toggleScript() {
+            const scriptElement = document.getElementById('gitmoderScript');
+            const scriptBtn = document.getElementById('showGitmoderScriptBtn');
+            
+            scriptVisible = !scriptVisible;
+            
+            if (scriptVisible) {
+                scriptElement.style.display = 'block';
+                scriptBtn.textContent = 'Скрыть скрипт';
+            } else {
+                scriptElement.style.display = 'none';
+                scriptBtn.textContent = 'Показать скрипт';
+            }
+        }
+
+        // Копирование в буфер обмена
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Ключ скопирован в буфер обмена');
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+                showNotification('Ошибка копирования');
+            });
+        }
+
+        // Копирование скрипта
+        function copyScriptToClipboard() {
+            const scriptText = document.querySelector('.script-code').textContent;
+            navigator.clipboard.writeText(scriptText).then(() => {
+                showNotification('Скрипт скопирован в буфер обмена');
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+                showNotification('Ошибка копирования скрипта');
+            });
+        }
+
+        // Удаление ключа
+        function deleteKey(index) {
+            if (confirm('Вы уверены, что хотите удалить этот ключ?')) {
+                // Удаляем ключ из списка сгенерированных
+                if (keys[index]) {
+                    generatedKeys.delete(keys[index].key);
+                }
+                
+                keys.splice(index, 1);
+                saveKeys();
+                renderKeys();
+                showNotification('Ключ успешно удалён');
+            }
+        }
+
+        // Показать уведомление
+        function showNotification(message) {
+            const container = document.getElementById('notificationContainer');
+            const id = 'notification-' + notificationId++;
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.id = id;
+            
+            const progress = document.createElement('div');
+            progress.className = 'notification-progress';
+            
+            notification.innerHTML = `<div>${message}</div>`;
+            notification.appendChild(progress);
+            container.appendChild(notification);
+            
+            // Показать уведомление
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Скрыть через 5 секунд
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+                
+                // Удалить после анимации
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
