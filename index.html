@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitUnlock | Генератор ключей</title>
     <link rel="icon" href="https://raw.githubusercontent.com/serezanet2/Gitmoder/main/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <style>
         /* Основные стили */
         body {
@@ -549,20 +550,32 @@
         function loadKeys() {
             const savedKeys = localStorage.getItem('savedKeys');
             if (savedKeys) {
-                keys = JSON.parse(savedKeys);
-                
-                // Восстанавливаем сгенерированные ключи
-                const savedGeneratedKeys = localStorage.getItem('generatedKeys');
-                if (savedGeneratedKeys) {
-                    generatedKeys = new Set(JSON.parse(savedGeneratedKeys));
-                } else {
-                    // Если нет сохраненных сгенерированных ключей, создаем из текущих
-                    keys.forEach(keyData => {
-                        generatedKeys.add(keyData.key);
-                    });
+                try {
+                    keys = JSON.parse(savedKeys);
+                    if (!Array.isArray(keys)) {
+                        keys = [];
+                        localStorage.setItem('savedKeys', JSON.stringify(keys));
+                    }
+                    
+                    // Восстанавливаем сгенерированные ключи
+                    const savedGeneratedKeys = localStorage.getItem('generatedKeys');
+                    if (savedGeneratedKeys) {
+                        generatedKeys = new Set(JSON.parse(savedGeneratedKeys));
+                    } else {
+                        // Если нет сохраненных сгенерированных ключей, создаем из текущих
+                        keys.forEach(keyData => {
+                            if (keyData && keyData.key) {
+                                generatedKeys.add(keyData.key);
+                            }
+                        });
+                    }
+                    
+                    renderKeys();
+                } catch (e) {
+                    console.error('Ошибка загрузки ключей:', e);
+                    keys = [];
+                    localStorage.setItem('savedKeys', JSON.stringify(keys));
                 }
-                
-                renderKeys();
             }
         }
 
@@ -571,22 +584,30 @@
             const keysList = document.getElementById('gitmoderKeysList');
             keysList.innerHTML = '';
             
-            if (keys.length === 0) {
+            if (!keys || keys.length === 0) {
                 keysList.innerHTML = '<div class="key-item" style="justify-content: center;">Нет активных ключей</div>';
                 return;
             }
             
-            // Показываем только первые 4 ключа
-            const keysToShow = keys.slice(0, 4);
+            // Фильтруем невалидные записи и показываем только первые 4 ключа
+            const validKeys = keys.filter(k => k && k.key && k.expiration);
+            const keysToShow = validKeys.slice(0, 4);
+            
+            if (keysToShow.length === 0) {
+                keysList.innerHTML = '<div class="key-item" style="justify-content: center;">Нет активных ключей</div>';
+                return;
+            }
             
             keysToShow.forEach((keyData, index) => {
+                if (!keyData || !keyData.key) return;
+                
                 const keyElement = document.createElement('div');
                 keyElement.className = 'key-item';
                 keyElement.innerHTML = `
                     <div class="key-text">${keyData.key}</div>
                     <div class="key-timer" id="timer-${index}">Загрузка...</div>
                     <div class="key-actions">
-                        <button class="action-btn copy-btn" onclick="copyToClipboard('${keyData.key}')">⎘</button>
+                        <button class="action-btn copy-btn" onclick="copyToClipboard('${keyData.key.replace(/'/g, "\\'")}')">⎘</button>
                         <button class="action-btn delete-btn" onclick="deleteKey(${index})">🗑️</button>
                     </div>
                 `;
@@ -600,6 +621,11 @@
         function updateKeyTimer(index, expirationTime) {
             const timerElement = document.getElementById(`timer-${index}`);
             if (!timerElement) return;
+            
+            // Очищаем предыдущий интервал, если он есть
+            if (timerElement.dataset.intervalId) {
+                clearInterval(parseInt(timerElement.dataset.intervalId));
+            }
             
             function update() {
                 const now = new Date().getTime();
