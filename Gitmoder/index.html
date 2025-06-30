@@ -6,7 +6,6 @@
     <title>GitUnlock | Gitmoder</title>
     <link rel="icon" href="../icon.png" type="image/png">
     <style>
-        /* ВАШ ОРИГИНАЛЬНЫЙ CSS БЕЗ ИЗМЕНЕНИЙ */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -240,18 +239,59 @@
                 const expires = Date.now() + 172800000;
                 this.keys[key] = expires;
                 localStorage.setItem('gitmoder_keys', JSON.stringify(this.keys));
+                this.updateKeysList();
                 
                 return key;
             },
 
             validateKey: function(key) {
-                const expires = localStorage.getItem(key);
-                return expires && expires > Date.now();
+                const savedKeys = JSON.parse(localStorage.getItem('gitmoder_keys') || '{}');
+                return savedKeys[key] && savedKeys[key] > Date.now();
             },
 
             loadKeys: function() {
                 const saved = localStorage.getItem('gitmoder_keys');
                 if (saved) this.keys = JSON.parse(saved);
+                this.updateKeysList();
+            },
+
+            updateKeysList: function() {
+                const keysList = document.getElementById('keysList');
+                keysList.innerHTML = '';
+                
+                for (const [key, expires] of Object.entries(this.keys)) {
+                    const keyItem = document.createElement('div');
+                    keyItem.className = 'key-item';
+                    
+                    const daysLeft = Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24));
+                    const timerText = daysLeft > 0 ? `Действителен ${daysLeft} дн.` : "Просрочен";
+                    
+                    keyItem.innerHTML = `
+                        <div class="key-text">${key}</div>
+                        <div class="key-timer">${timerText}</div>
+                        <div class="key-actions">
+                            <button class="action-btn copy-btn" data-key="${key}">Копировать</button>
+                        </div>
+                    `;
+                    
+                    keysList.appendChild(keyItem);
+                }
+                
+                // Добавляем обработчики для кнопок копирования
+                document.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const key = this.getAttribute('data-key');
+                        navigator.clipboard.writeText(key)
+                            .then(() => {
+                                const notification = document.createElement('div');
+                                notification.className = 'notification show';
+                                notification.innerHTML = `Ключ скопирован: ${key}`;
+                                document.getElementById('notificationContainer').appendChild(notification);
+                                setTimeout(() => notification.remove(), 3000);
+                            })
+                            .catch(() => prompt('Скопируйте ключ вручную:', key));
+                    });
+                });
             },
 
             showNotification: function(message) {
