@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitUnlock | Главная</title>
+    <meta name="theme-color" content="#7b1fa2">
+    <meta name="description" content="GitUnlock - сервис для генерации ключей доступа к Gitmoder и CodeCrush">
     <link rel="icon" href="icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
     <style>
         /* Основные стили */
         body {
@@ -145,6 +149,15 @@
             background: linear-gradient(45deg, #1976d2, #1565c0);
         }
 
+        .btn-green {
+            background: linear-gradient(45deg, #2e7d32, #1b5e20);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-green:hover {
+            background: linear-gradient(45deg, #388e3c, #2e7d32);
+        }
+
         .btn-group {
             display: flex;
             justify-content: center;
@@ -228,11 +241,23 @@
             border-radius: 0 0 0 10px;
             animation: progress 5s linear forwards;
         }
+
+        /* Кнопка установки PWA */
+        .install-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <!-- Уведомления -->
     <div class="notification-container" id="notificationContainer"></div>
+    
+    <!-- Кнопка установки PWA -->
+    <button id="installBtn" class="btn btn-green install-btn">Установить приложение</button>
 
     <div class="menu-container">
         <h1 class="app-title">GitUnlock</h1>
@@ -324,6 +349,7 @@
 
     <script>
         let notificationId = 0;
+        let deferredPrompt;
 
         // Функция для копирования скрипта
         function copyScriptToClipboard(scriptType) {
@@ -373,6 +399,59 @@
                     notification.remove();
                 }, 300);
             }, 5000);
+        }
+
+        // PWA Установка
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Предотвращаем автоматическое отображение подсказки
+            e.preventDefault();
+            // Сохраняем событие для последующего использования
+            deferredPrompt = e;
+            // Показываем кнопку установки
+            const installBtn = document.getElementById('installBtn');
+            installBtn.style.display = 'block';
+            
+            installBtn.addEventListener('click', () => {
+                // Показываем подсказку установки
+                deferredPrompt.prompt();
+                // Ждем ответа пользователя
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showNotification('Приложение успешно установлено!');
+                    } else {
+                        showNotification('Установка отменена');
+                    }
+                    deferredPrompt = null;
+                    installBtn.style.display = 'none';
+                });
+            });
+        });
+
+        // Проверяем, установлено ли приложение
+        window.addEventListener('appinstalled', () => {
+            showNotification('Спасибо за установку GitUnlock!');
+            const installBtn = document.getElementById('installBtn');
+            installBtn.style.display = 'none';
+        });
+
+        // Проверяем, запущено ли приложение как PWA
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('Запущено как PWA');
+            const installBtn = document.getElementById('installBtn');
+            installBtn.style.display = 'none';
+        }
+    </script>
+    
+    <!-- Файл манифеста для PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
         }
     </script>
 </body>
