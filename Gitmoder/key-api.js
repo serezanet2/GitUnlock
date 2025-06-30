@@ -2,7 +2,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('check')) {
     const key = urlParams.get('check');
-    const validKeys = JSON.parse(localStorage.getItem('gitmoder_keys') || {};
+    const validKeys = JSON.parse(localStorage.getItem('gitmoder_keys') || '{}');
     const isValid = validKeys[key] && validKeys[key] > Date.now();
     
     // Возвращаем ответ в формате JSON
