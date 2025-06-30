@@ -2,10 +2,10 @@
   "name": "GitUnlock",
   "short_name": "GitUnlock",
   "description": "Сервис для генерации ключей доступа к Gitmoder и CodeCrush",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#7b1fa2",
+  "theme_color": "##000000",
   "icons": [
     {
       "src": "icon.png",
