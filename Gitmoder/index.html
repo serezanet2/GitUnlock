@@ -6,7 +6,7 @@
     <title>GitUnlock | Gitmoder</title>
     <link rel="icon" href="../icon.png" type="image/png">
     <style>
-        /* ОРИГИНАЛЬНЫЕ СТИЛИ БЕЗ ИЗМЕНЕНИЙ */
+        /* ВАШ ОРИГИНАЛЬНЫЙ CSS БЕЗ ИЗМЕНЕНИЙ */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -21,13 +21,11 @@
             background-size: 400% 400%;
             animation: gradientAnimation 15s ease infinite;
         }
-
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .menu-container {
             position: relative;
             width: 90%;
@@ -43,7 +41,6 @@
             min-height: 400px;
             overflow: hidden;
         }
-
         .app-title {
             font-size: 2.5em;
             margin-bottom: 20px;
@@ -52,13 +49,11 @@
             -webkit-text-fill-color: transparent;
             animation: titleGlow 3s ease infinite;
         }
-
         @keyframes titleGlow {
             0% { text-shadow: 0 0 10px rgba(123, 31, 162, 0.5); }
             50% { text-shadow: 0 0 20px rgba(25, 118, 210, 0.8); }
             100% { text-shadow: 0 0 10px rgba(123, 31, 162, 0.5); }
         }
-
         .key-container {
             width: 100%;
             max-height: 60vh;
@@ -66,7 +61,6 @@
             margin: 20px 0;
             padding-right: 10px;
         }
-
         .key-header {
             background: rgba(123, 31, 162, 0.3);
             padding: 15px;
@@ -75,7 +69,6 @@
             font-size: 1.1em;
             animation: fadeIn 0.5s ease;
         }
-
         .key-item {
             background: rgba(255, 255, 255, 0.1);
             padding: 12px 15px;
@@ -87,17 +80,14 @@
             transition: all 0.3s;
             animation: fadeIn 0.3s ease;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .key-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-
         .key-text {
             font-family: monospace;
             word-break: break-all;
@@ -105,7 +95,6 @@
             text-align: left;
             padding-right: 15px;
         }
-
         .key-timer {
             background: rgba(0, 0, 0, 0.3);
             padding: 5px 10px;
@@ -115,16 +104,13 @@
             margin: 0 10px;
             transition: all 0.3s;
         }
-
         .key-timer:hover {
             transform: scale(1.05);
         }
-
         .key-actions {
             display: flex;
             gap: 8px;
         }
-
         button {
             border: none;
             padding: 12px 25px;
@@ -135,30 +121,24 @@
             min-width: 180px;
             color: white;
         }
-
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
         }
-
         .btn-primary {
             background: linear-gradient(45deg, #7b1fa2, #4a148c);
             box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
         }
-
         .btn-primary:hover {
             background: linear-gradient(45deg, #8e24aa, #5c1a8a);
         }
-
         .btn-blue {
             background: linear-gradient(45deg, #1565c0, #0d47a1);
             box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);
         }
-
         .btn-blue:hover {
             background: linear-gradient(45deg, #1976d2, #1565c0);
         }
-
         .action-btn {
             width: 40px;
             height: 40px;
@@ -171,33 +151,27 @@
             border: none;
             font-size: 16px;
         }
-
         .copy-btn {
             background: #4285f4;
             color: white;
         }
-
         .copy-btn:hover {
             background: #3367d6;
             transform: scale(1.1);
         }
-
         .key-container::-webkit-scrollbar {
             width: 8px;
         }
-
         .key-container::-webkit-scrollbar-thumb {
             background: rgba(123, 31, 162, 0.5);
             border-radius: 4px;
         }
-
         .notification-container {
             position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 1000;
         }
-
         .notification {
             background: rgba(0, 0, 0, 0.8);
             color: white;
@@ -210,20 +184,16 @@
             max-width: 300px;
             word-wrap: break-word;
         }
-
         .notification.show {
             transform: translateX(0);
         }
-
         .notification.hide {
             transform: translateX(120%);
         }
-
         @keyframes progress {
             0% { width: 100%; }
             100% { width: 0%; }
         }
-
         .notification-progress {
             position: absolute;
             bottom: 0;
@@ -253,17 +223,11 @@
     </div>
 
     <script>
-        // ===== Система ключей ===== //
+        // ===== СИСТЕМА КЛЮЧЕЙ ===== //
         const KeySystem = {
-            keys: [],
-            maxKeys: 2,
+            keys: {},
             
             generateKey: function() {
-                if (this.keys.length >= this.maxKeys) {
-                    this.showNotification(`❌ Максимум ${this.maxKeys} ключа`);
-                    return null;
-                }
-
                 const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
                 let key = 'GIT-';
                 
@@ -271,22 +235,23 @@
                     if (i > 0 && i % 4 === 0) key += '-';
                     key += chars.charAt(Math.floor(Math.random() * chars.length));
                 }
-
-                const expiration = Date.now() + 172800000; // 48 часов
-                this.keys.push({ key, expiration });
-                localStorage.setItem('gitmoderKeys', JSON.stringify(this.keys));
+                
+                // Ключ действителен 2 дня
+                const expires = Date.now() + 172800000;
+                this.keys[key] = expires;
+                localStorage.setItem('gitmoder_keys', JSON.stringify(this.keys));
                 
                 return key;
             },
 
             validateKey: function(key) {
-                const keyData = this.keys.find(k => k.key === key);
-                return keyData && keyData.expiration > Date.now();
+                const expires = localStorage.getItem(key);
+                return expires && expires > Date.now();
             },
 
             loadKeys: function() {
-                const saved = localStorage.getItem('gitmoderKeys');
-                if (saved) this.keys = JSON.parse(saved).filter(k => k.expiration > Date.now());
+                const saved = localStorage.getItem('gitmoder_keys');
+                if (saved) this.keys = JSON.parse(saved);
             },
 
             showNotification: function(message) {
@@ -302,52 +267,18 @@
             }
         };
 
-        // ===== Инициализация ===== //
+        // Инициализация
         KeySystem.loadKeys();
-        renderKeys();
 
         // Обработчики событий
         document.getElementById('generateKeyBtn').addEventListener('click', () => {
             const key = KeySystem.generateKey();
-            if (key) {
-                KeySystem.showNotification('✅ Ключ создан: ' + key);
-                renderKeys();
-            }
+            KeySystem.showNotification('✅ Ключ создан: ' + key);
         });
 
         document.getElementById('mainMenuBtn').addEventListener('click', () => {
             window.location.href = '../';
         });
-
-        // Функция для отрисовки ключей
-        function renderKeys() {
-            const container = document.getElementById('keysList');
-            container.innerHTML = '';
-            
-            if (KeySystem.keys.length === 0) {
-                container.innerHTML = '<div class="key-item" style="justify-content: center;">Нет активных ключей</div>';
-                return;
-            }
-
-            KeySystem.keys.forEach(keyData => {
-                const keyElement = document.createElement('div');
-                keyElement.className = 'key-item';
-                
-                // Расчет оставшегося времени
-                const timeLeft = keyData.expiration - Date.now();
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                
-                keyElement.innerHTML = `
-                    <div class="key-text">${keyData.key}</div>
-                    <div class="key-timer">${days}д ${Math.round(hours)}ч</div>
-                    <div class="key-actions">
-                        <button class="action-btn copy-btn" onclick="navigator.clipboard.writeText('${keyData.key}')">⎘</button>
-                    </div>
-                `;
-                container.appendChild(keyElement);
-            });
-        }
 
         // Для Lua-чита
         window.validateKeyForLua = function(key) {
