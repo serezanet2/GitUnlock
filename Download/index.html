@@ -6,6 +6,7 @@
     <title>Vortex | Загрузка</title>
     <meta name="theme-color" content="#000000">
     <style>
+        /* Стили остаются без изменений */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -93,10 +94,7 @@
     </div>
 
     <div class="btn-container hidden" id="btnContainer">
-        <a href="https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip" 
-           class="btn" 
-           id="directDownloadBtn" 
-           download="vortex.zip">
+        <a href="#" class="btn" id="directDownloadBtn" download="vortex.zip">
            Скачать vortex.zip
         </a>
         <button class="btn" id="retryBtn">Повторить автоматическую загрузку</button>
@@ -106,13 +104,32 @@
     </div>
 
     <script>
+        // Получаем базовый URL и удаляем /Download/ если он есть
+        function getCleanBaseUrl() {
+            let currentUrl = window.location.href;
+            if (currentUrl.includes('/Download/')) {
+                currentUrl = currentUrl.replace('/Download/', '/');
+                history.replaceState(null, null, currentUrl);
+            }
+            return currentUrl.split('?')[0].split('#')[0];
+        }
+
+        // Формируем URL для скачивания
+        function getDownloadUrl() {
+            const baseUrl = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/';
+            return baseUrl + 'vortex.zip';
+        }
+
         // Конфигурация
         const CONFIG = {
-            downloadUrl: 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip',
+            downloadUrl: getDownloadUrl(),
             filename: 'vortex.zip',
-            redirectUrl: 'https://serezanet2.github.io/GitUnlock/',
+            redirectUrl: getCleanBaseUrl().replace('/download', ''),
             retryDelay: 3000
         };
+
+        // Обновляем ссылку для скачивания
+        document.getElementById('directDownloadBtn').href = CONFIG.downloadUrl;
 
         // Элементы DOM
         const elements = {
@@ -145,9 +162,11 @@
                 elements.btnContainer.classList.remove('hidden');
                 
                 // Перенаправить через 5 секунд
-                setTimeout(() => {
-                    window.location.href = CONFIG.redirectUrl;
-                }, 5000);
+                if (CONFIG.redirectUrl) {
+                    setTimeout(() => {
+                        window.location.href = CONFIG.redirectUrl;
+                    }, 5000);
+                }
             }, 2000);
         }
 
