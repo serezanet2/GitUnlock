@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex | Загрузка</title>
+    <meta name="theme-color" content="#000000">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background: linear-gradient(-45deg, #000000, #333333, #666666);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #7b1fa2;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .status-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 80%;
+        }
+        .retry-btn {
+            display: none;
+            background: linear-gradient(45deg, #7b1fa2, #4a148c);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="status-text" id="statusText">Подготовка к скачиванию Vortex...</div>
+    <button class="retry-btn" id="retryBtn">Повторить попытку</button>
+
+    <script>
+        const statusText = document.getElementById('statusText');
+        const retryBtn = document.getElementById('retryBtn');
+        let downloadStarted = false;
+
+        // Прямая ссылка на Vortex.zip на GitHub
+        const VORTEX_ZIP_URL = 'https://github.com/serezanet2/GitUnlock/raw/main/Vortex.zip';
+
+        async function startDownload() {
+            downloadStarted = false;
+            statusText.textContent = "Начало скачивания Vortex...";
+            retryBtn.style.display = 'none';
+
+            try {
+                // Пытаемся скачать файл
+                const response = await fetch(VORTEX_ZIP_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                }
+
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'Vortex.zip';
+                
+                link.onclick = () => {
+                    downloadStarted = true;
+                    statusText.textContent = "Скачивание началось! Перенаправление...";
+                    setTimeout(() => {
+                        window.location.href = "https://serezanet2.github.io/GitUnlock/";
+                    }, 2000);
+                };
+                
+                document.body.appendChild(link);
+                link.click();
+
+                // Проверка через 10 секунд
+                setTimeout(() => {
+                    if (!downloadStarted) {
+                        statusText.innerHTML = "Скачивание не началось.<br>Возможно, файл недоступен или слишком большой.";
+                        retryBtn.style.display = 'block';
+                    }
+                    URL.revokeObjectURL(blobUrl);
+                }, 10000);
+
+            } catch (error) {
+                statusText.innerHTML = `Ошибка при скачивании:<br>${error.message}`;
+                retryBtn.style.display = 'block';
+                console.error('Download error:', error);
+            }
+        }
+
+        retryBtn.addEventListener('click', startDownload);
+        
+        // Начинаем загрузку с небольшой задержкой
+        setTimeout(startDownload, 500);
+    </script>
+</body>
+</html>
