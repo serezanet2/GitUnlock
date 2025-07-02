@@ -66,8 +66,8 @@
         const retryBtn = document.getElementById('retryBtn');
         let downloadStarted = false;
 
-        // Прямая ссылка на Vortex.zip на GitHub
-        const VORTEX_ZIP_URL = 'https://github.com/serezanet2/GitUnlock/raw/main/Download/Vortex.zip;
+        // ПРАВИЛЬНАЯ ссылка для скачивания с GitHub
+        const VORTEX_ZIP_URL = 'https://github.com/serezanet2/GitUnlock/raw/main/Download/Vortex.zip';
 
         async function startDownload() {
             downloadStarted = false;
@@ -75,18 +75,11 @@
             retryBtn.style.display = 'none';
 
             try {
-                // Пытаемся скачать файл
-                const response = await fetch(VORTEX_ZIP_URL);
+                statusText.textContent = "Получение данных с GitHub...";
                 
-                if (!response.ok) {
-                    throw new Error(`Ошибка HTTP: ${response.status}`);
-                }
-
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                
+                // Создаем ссылку для скачивания
                 const link = document.createElement('a');
-                link.href = blobUrl;
+                link.href = VORTEX_ZIP_URL;
                 link.download = 'Vortex.zip';
                 
                 link.onclick = () => {
@@ -103,14 +96,13 @@
                 // Проверка через 10 секунд
                 setTimeout(() => {
                     if (!downloadStarted) {
-                        statusText.innerHTML = "Скачивание не началось.<br>Возможно, файл недоступен или слишком большой.";
+                        statusText.innerHTML = "Скачивание не началось.<br>Попробуйте вручную: <a href='" + VORTEX_ZIP_URL + "' style='color:#7b1fa2'>скачать Vortex.zip</a>";
                         retryBtn.style.display = 'block';
                     }
-                    URL.revokeObjectURL(blobUrl);
                 }, 10000);
 
             } catch (error) {
-                statusText.innerHTML = `Ошибка при скачивании:<br>${error.message}`;
+                statusText.innerHTML = `Ошибка при скачивании:<br>${error.message}<br><a href="${VORTEX_ZIP_URL}" style="color:#7b1fa2">Скачать вручную</a>`;
                 retryBtn.style.display = 'block';
                 console.error('Download error:', error);
             }
@@ -118,8 +110,8 @@
 
         retryBtn.addEventListener('click', startDownload);
         
-        // Начинаем загрузку с небольшой задержкой
-        setTimeout(startDownload, 500);
+        // Начинаем загрузку
+        startDownload();
     </script>
 </body>
 </html>
