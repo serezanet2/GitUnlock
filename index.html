@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -279,34 +278,6 @@
             border-radius: 0 0 0 10px;
             animation: progress 5s linear forwards;
         }
-        
-        /* Стили для кнопки обновления */
-        #reloadButton {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #7b1fa2;
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            z-index: 1000;
-            display: none;
-            transition: all 0.3s;
-        }
-        
-        #reloadButton:hover {
-            background-color: #9c27b0;
-            transform: scale(1.1) rotate(180deg);
-        }
-        
-        #reloadButton:active {
-            transform: scale(0.95);
-        }
     </style>
 </head>
 <body>
@@ -326,9 +297,6 @@
     </div>
 
     <div class="notification-container" id="notificationContainer"></div>
-    
-    <!-- Кнопка обновления -->
-    <button id="reloadButton" title="Обновить приложение">↻</button>
 
     <div class="menu-container">
         <h1 class="app-title">GitUnlock</h1>
@@ -418,7 +386,6 @@
         let notificationId = 0;
         let deferredPrompt;
         let keyMenuVisible = false;
-        let newWorker;
 
         // Обработчики для кнопок скачивания
         document.getElementById('downloadTopBtn').addEventListener('click', function() {
@@ -536,45 +503,13 @@
             showNotification('Спасибо за установку GitUnlock!');
         });
 
-        // Обработчик для кнопки обновления
-        document.getElementById('reloadButton').addEventListener('click', () => {
-            if (newWorker) {
-                newWorker.postMessage({ action: 'skipWaiting' });
-            }
-            window.location.reload();
-        });
-
-        function showUpdateButton() {
-            const button = document.getElementById('reloadButton');
-            button.style.display = 'block';
-            button.addEventListener('click', () => {
-                newWorker.postMessage({ action: 'skipWaiting' });
-                window.location.reload();
-            });
-        }
-
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js').then(registration => {
                     console.log('ServiceWorker зарегистрирован');
-                    
-                    registration.addEventListener('updatefound', () => {
-                        newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                showUpdateButton();
-                                showNotification('Доступна новая версия! Нажмите на кнопку обновления.');
-                            }
-                        });
-                    });
                 }).catch(err => {
                     console.log('Ошибка регистрации ServiceWorker: ', err);
                 });
-            });
-
-            // Проверяем, есть ли обновление при загрузке
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                window.location.reload();
             });
         }
     </script>
