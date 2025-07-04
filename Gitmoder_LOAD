@@ -1,4 +1,4 @@
--- Проверка на повторный запуск
+
 if _SerezaNet2_MenuMod_Loaded then return end
 _SerezaNet2_MenuMod_Loaded = true
 
