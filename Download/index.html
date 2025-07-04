@@ -58,7 +58,6 @@
                     history.replaceState(null, null, cleanUrl);
                 }
 
-                // 3. Перезагружаем страницу через 3 секунды (гарантированное время для скачивания)
                 setTimeout(() => {
                     window.location.reload();
                 }, 3000);
