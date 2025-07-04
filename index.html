@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitUnlock | Главная</title>
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="GitUnlock - сервис для генерации ключей доступа к Gitmoder и CodeCrush">
+    <meta name="description" content="GitUnlock - сервис для генерации ключей доступа к Gitmoder">
     <link rel="icon" href="icon.png" type="image/png">
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="manifest" href="manifest.json">
@@ -103,9 +103,6 @@
         }
         .key-menu-gitmoder {
             background: linear-gradient(45deg, #7b1fa2, #4a148c);
-        }
-        .key-menu-codecrush {
-            background: linear-gradient(45deg, #1565c0, #0d47a1);
         }
         .key-menu-btn:hover {
             transform: translateY(-3px);
@@ -294,7 +291,6 @@
 
     <div class="key-menu" id="keyMenu">
         <button class="key-menu-btn key-menu-gitmoder" onclick="window.location.href='Gitmoder/'">Gitmoder</button>
-        <button class="key-menu-btn key-menu-codecrush" onclick="window.location.href='CodeCrush/'">CodeCrush</button>
     </div>
 
     <div class="notification-container" id="notificationContainer"></div>
@@ -375,7 +371,6 @@
                     <h2>Скачать инжектор</h2>
                     <div class="btn-group">
                         <button class="btn btn-primary" onclick="copyScriptToClipboard('Gitmoder')">Скопировать Gitmoder</button>
-                        <button class="btn btn-blue" onclick="copyScriptToClipboard('CodeCrush')">Скопировать CodeCrush</button>
                         <a href="https://serezanet2.github.io/GitUnlock/LoadFile/" class="btn btn-dark">Скачать Vortex</a>
                     </div>
                 </div>
@@ -419,15 +414,10 @@
         }
 
         function copyScriptToClipboard(scriptType) {
-            let scriptText;
-            if (scriptType === 'Gitmoder') {
-                scriptText = 'loadstring(game:HttpGet(\'https://raw.githubusercontent.com/serezanet2/Gitmoder/refs/heads/main/Gitmoder_LOADER\'))()';
-            } else if (scriptType === 'CodeCrush') {
-                scriptText = 'loadstring(game:HttpGet(\'https://raw.githubusercontent.com/serezanet2/CodeCrush/refs/heads/main/CodeCrush_LOADER\'))()';
-            }
+            let scriptText = 'loadstring(game:HttpGet(\'https://raw.githubusercontent.com/serezanet2/Gitmoder/refs/heads/main/Gitmoder_LOADER\'))()';
             
             navigator.clipboard.writeText(scriptText).then(() => {
-                showNotification('Скрипт ' + scriptType + ' скопирован в буфер обмена');
+                showNotification('Скрипт Gitmoder скопирован в буфер обмена');
             }).catch(err => {
                 console.error('Ошибка копирования: ', err);
                 showNotification('Ошибка копирования скрипта');
