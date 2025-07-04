@@ -20,7 +20,6 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Возвращаем кэшированный ответ, если он есть
         if (response) {
           return response;
         }
