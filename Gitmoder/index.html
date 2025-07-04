@@ -6,6 +6,90 @@
     <title>GitUnlock | Gitmoder</title>
     <link rel="icon" href="../icon.png" type="image/png">
     <style>
+        /* Стили для верхнего меню */
+        .nav-menu {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            background-color: rgba(123, 31, 162, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Стили для key-menu */
+        .key-menu {
+            position: fixed;
+            bottom: -100px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px 0;
+            text-align: center;
+            z-index: 999;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .key-menu.active {
+            bottom: 0;
+        }
+        .neon-text {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #7b1fa2,
+                0 0 10px #7b1fa2,
+                0 0 20px #7b1fa2,
+                0 0 40px #7b1fa2;
+            animation: neonGlow 1.5s ease-in-out infinite alternate;
+            background: linear-gradient(90deg, #7b1fa2, #1976d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            padding: 10px 0;
+        }
+        @keyframes neonGlow {
+            from {
+                text-shadow: 
+                    0 0 5px #7b1fa2,
+                    0 0 10px #7b1fa2,
+                    0 0 20px #7b1fa2,
+                    0 0 40px #7b1fa2;
+            }
+            to {
+                text-shadow: 
+                    0 0 10px #7b1fa2,
+                    0 0 20px #7b1fa2,
+                    0 0 30px #7b1fa2,
+                    0 0 50px #7b1fa2;
+            }
+        }
+
+        /* Основные стили */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -19,6 +103,7 @@
             background: linear-gradient(-45deg, #000000, #333333, #666666);
             background-size: 400% 400%;
             animation: gradientAnimation 15s ease infinite;
+            padding-top: 60px;
         }
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
@@ -39,6 +124,7 @@
             transition: all 0.3s ease;
             min-height: 400px;
             overflow: hidden;
+            margin-top: 20px;
         }
         .app-title {
             font-size: 2.5em;
@@ -66,7 +152,6 @@
             border-radius: 10px;
             margin-bottom: 10px;
             font-size: 1.1em;
-            animation: fadeIn 0.5s ease;
         }
         .key-item {
             background: rgba(255, 255, 255, 0.1);
@@ -77,15 +162,15 @@
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         .key-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .key-text-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
         }
         .key-text {
             font-family: monospace;
@@ -93,22 +178,26 @@
             flex: 1;
             text-align: left;
             padding-right: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
         }
         .key-timer {
             background: rgba(0, 0, 0, 0.3);
             padding: 5px 10px;
             border-radius: 5px;
+            margin-left: 10px;
+            font-family: monospace;
+            font-size: 0.9em;
             min-width: 120px;
-            text-align: right;
-            margin: 0 10px;
-            transition: all 0.3s;
+            text-align: center;
         }
-        .key-timer:hover {
-            transform: scale(1.05);
+        .key-timer.expired {
+            color: #ff5252;
         }
         .key-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
         button {
             border: none;
@@ -131,16 +220,8 @@
         .btn-primary:hover {
             background: linear-gradient(45deg, #8e24aa, #5c1a8a);
         }
-        .btn-blue {
-            background: linear-gradient(45deg, #1565c0, #0d47a1);
-            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);
-        }
-        .btn-blue:hover {
-            background: linear-gradient(45deg, #1976d2, #1565c0);
-        }
         .action-btn {
-            width: 40px;
-            height: 40px;
+            padding: 8px 15px;
             border-radius: 8px;
             display: flex;
             justify-content: center;
@@ -148,7 +229,8 @@
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
+            min-width: auto;
         }
         .copy-btn {
             background: #4285f4;
@@ -156,7 +238,15 @@
         }
         .copy-btn:hover {
             background: #3367d6;
-            transform: scale(1.1);
+            transform: scale(1.05);
+        }
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        .delete-btn:hover {
+            background: #d32f2f;
+            transform: scale(1.05);
         }
         .key-container::-webkit-scrollbar {
             width: 8px;
@@ -189,22 +279,25 @@
         .notification.hide {
             transform: translateX(120%);
         }
-        @keyframes progress {
-            0% { width: 100%; }
-            100% { width: 0%; }
-        }
-        .notification-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 0 0 0 10px;
-            animation: progress 5s linear forwards;
-        }
     </style>
 </head>
 <body>
+    <!-- Верхнее меню -->
+    <nav class="nav-menu">
+        <div class="nav-container">
+            <a href="https://serezanet2.github.io/GitUnlock/" class="nav-item">Главная</a>
+            <div class="nav-item" id="getKeyBtn">Получить ключ</div>
+            <a href="https://serezanet2.github.io/GitUnlock/LoadFile/" class="nav-item">Скачать</a>
+            <a href="https://www.youtube.com/@Vortex_GIT" class="nav-item" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="https://serezanet2.github.io/GitUnlock/Updates/" class="nav-item">Обновления</a>
+        </div>
+    </nav>
+
+    <!-- Key-menu с неоновым текстом (изначально скрыто) -->
+    <div class="key-menu" id="keyMenu">
+        <div class="neon-text">Вы на сайте для получения ключа Gitmoder</div>
+    </div>
+
     <div class="notification-container" id="notificationContainer"></div>
 
     <div class="menu-container">
@@ -217,7 +310,6 @@
         
         <div class="btn-group">
             <button class="btn-primary" id="generateKeyBtn">Новый ключ</button>
-            <button class="btn-blue" id="mainMenuBtn">Главное меню</button>
         </div>
     </div>
 
@@ -244,6 +336,13 @@
                 return key;
             },
 
+            deleteKey: function(key) {
+                delete this.keys[key];
+                localStorage.setItem('gitmoder_keys', JSON.stringify(this.keys));
+                this.updateKeysList();
+                this.showNotification('🗑️ Ключ удален');
+            },
+
             validateKey: function(key) {
                 const savedKeys = JSON.parse(localStorage.getItem('gitmoder_keys') || '{}');
                 return savedKeys[key] && savedKeys[key] > Date.now();
@@ -255,6 +354,17 @@
                 this.updateKeysList();
             },
 
+            formatTime: function(ms) {
+                if (ms <= 0) return "Просрочен";
+                
+                const seconds = Math.floor((ms / 1000) % 60);
+                const minutes = Math.floor((ms / (1000 * 60)) % 60);
+                const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+                const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+                
+                return `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+            },
+
             updateKeysList: function() {
                 const keysList = document.getElementById('keysList');
                 keysList.innerHTML = '';
@@ -263,14 +373,20 @@
                     const keyItem = document.createElement('div');
                     keyItem.className = 'key-item';
                     
-                    const daysLeft = Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24));
-                    const timerText = daysLeft > 0 ? `Действителен ${daysLeft} дн.` : "Просрочен";
+                    const timeLeft = expires - Date.now();
+                    const timerText = this.formatTime(timeLeft);
+                    const isExpired = timeLeft <= 0;
                     
                     keyItem.innerHTML = `
-                        <div class="key-text">${key}</div>
-                        <div class="key-timer">${timerText}</div>
+                        <div class="key-text-wrapper">
+                            <div class="key-text">
+                                ${key}
+                                <div class="key-timer ${isExpired ? 'expired' : ''}">${timerText}</div>
+                            </div>
+                        </div>
                         <div class="key-actions">
                             <button class="action-btn copy-btn" data-key="${key}">Копировать</button>
+                            <button class="action-btn delete-btn" data-key="${key}">Удалить</button>
                         </div>
                     `;
                     
@@ -283,13 +399,19 @@
                         const key = this.getAttribute('data-key');
                         navigator.clipboard.writeText(key)
                             .then(() => {
-                                const notification = document.createElement('div');
-                                notification.className = 'notification show';
-                                notification.innerHTML = `Ключ скопирован: ${key}`;
-                                document.getElementById('notificationContainer').appendChild(notification);
-                                setTimeout(() => notification.remove(), 3000);
+                                KeySystem.showNotification(`✅ Ключ скопирован: ${key}`);
                             })
                             .catch(() => prompt('Скопируйте ключ вручную:', key));
+                    });
+                });
+                
+                // Добавляем обработчики для кнопок удаления
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const key = this.getAttribute('data-key');
+                        if (confirm('Удалить этот ключ?')) {
+                            KeySystem.deleteKey(key);
+                        }
                     });
                 });
             },
@@ -302,7 +424,9 @@
                 container.appendChild(notification);
                 
                 setTimeout(() => {
-                    notification.remove();
+                    notification.classList.remove('show');
+                    notification.classList.add('hide');
+                    setTimeout(() => notification.remove(), 300);
                 }, 3000);
             }
         };
@@ -316,9 +440,25 @@
             KeySystem.showNotification('✅ Ключ создан: ' + key);
         });
 
-        document.getElementById('mainMenuBtn').addEventListener('click', () => {
-            window.location.href = '../';
+        // Обработчик для кнопки "Получить ключ" в верхнем меню
+        document.getElementById('getKeyBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const keyMenu = document.getElementById('keyMenu');
+            keyMenu.classList.toggle('active');
         });
+
+        // Закрытие key-menu при клике вне его
+        document.addEventListener('click', function() {
+            const keyMenu = document.getElementById('keyMenu');
+            if (keyMenu.classList.contains('active')) {
+                keyMenu.classList.remove('active');
+            }
+        });
+
+        // Обновление таймеров каждую секунду
+        setInterval(() => {
+            KeySystem.updateKeysList();
+        }, 1000);
 
         // Для Lua-чита
         window.validateKeyForLua = function(key) {
