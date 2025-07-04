@@ -53,8 +53,8 @@
             // 2. Очищаем URL после начала скачивания
             setTimeout(() => {
                 const currentUrl = window.location.href;
-                if (currentUrl.includes('/Download/')) {
-                    const cleanUrl = currentUrl.replace('/Download/', '/');
+                if (currentUrl.includes('/LoadFile/')) {
+                    const cleanUrl = currentUrl.replace('/LoadFile/', '/');
                     history.replaceState(null, null, cleanUrl);
                 }
 
