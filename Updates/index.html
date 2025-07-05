@@ -132,112 +132,8 @@
             padding-right: 10px;
             margin-bottom: 20px;
             text-align: left;
-        }
-        .description {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .description h2 {
-            margin-top: 0;
-            color: #7b1fa2;
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .download-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .btn {
-            border: none;
-            padding: 8px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 30px;
-            transition: all 0.3s;
-            min-width: 180px;
-            color: white;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-            text-align: center;
-            margin: 5px;
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary {
-            background: linear-gradient(45deg, #7b1fa2, #4a148c);
-            box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
-        }
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #8e24aa, #5c1a8a);
-        }
-        .btn-blue {
-            background: linear-gradient(45deg, #1565c0, #0d47a1);
-            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);
-        }
-        .btn-blue:hover {
-            background: linear-gradient(45deg, #1976d2, #1565c0);
-        }
-        .btn-dark {
-            background: linear-gradient(45deg, #333333, #000000);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .btn-dark:hover {
-            background: linear-gradient(45deg, #444444, #111111);
-        }
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .feature-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .feature-card {
-            background: rgba(123, 31, 162, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        .feature-card h3 {
-            margin-top: 0;
-            color: #7b1fa2;
-            border-bottom: 1px solid rgba(123, 31, 162, 0.5);
-            padding-bottom: 5px;
-        }
-        .feature-card ul {
-            padding-left: 20px;
-            margin-bottom: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         .notification-container {
             position: fixed;
@@ -283,7 +179,7 @@
         <div class="nav-container">
             <a href="https://serezanet2.github.io/GitUnlock/" class="nav-item">Главная</a>
             <div class="nav-item" id="getKeyBtn">Получить ключ</div>
-            <a href="https://serezanet2.github.io/GitUnlock/LoadFile/" class="nav-item">Скачать</a>
+            <a href="https://serezanet2.github.io/GitUnlock/Download/" class="nav-item">Скачать</a>
             <a href="https://www.youtube.com/@Vortex_GIT" class="nav-item" target="_blank" rel="noopener noreferrer">YouTube</a>
             <a href="https://serezanet2.github.io/GitUnlock/Updates/" class="nav-item">Обновления</a>
         </div>
@@ -298,83 +194,8 @@
     <div class="menu-container">
         <h1 class="app-title">GitUnlock</h1>
         
-        <div class="initial-content">
-            <div class="description">
-                <h2>Что такое GitUnlock?</h2>
-                <p>GitUnlock - это сервис для генерации ключей доступа к Gitmoder - мощному читу для Roblox. Ключи предоставляют временный доступ к функционалу чита и обновлениям.</p>
-                
-                <h2>Как использовать?</h2>
-                <ol>
-                    <li>Сгенерируйте ключ на этом сайте (действует 2 дня)</li>
-                    <li>Скопируйте скрипт Gitmoder</li>
-                    <li>Вставьте скрипт в инжектор (например, Vortex)</li>
-                    <li>При запуске введите ваш ключ для активации</li>
-                </ol>
-                
-                <h2>Функции Gitmoder</h2>
-                <div class="feature-list">
-                    <div class="feature-card">
-                        <h3>Основные функции</h3>
-                        <ul>
-                            <li>Кастомный курсор с анимацией</li>
-                            <li>Смена темы (темная/светлая)</li>
-                            <li>Информация о игроке</li>
-                            <li>8 вкладок с функциями</li>
-                            <li>Удобное управление</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3>Игровые функции</h3>
-                        <ul>
-                            <li>NoClip - прохождение сквозь стены</li>
-                            <li>Fly - свободный полет</li>
-                            <li>FreeCam - свободная камера</li>
-                            <li>Click TP - телепортация по клику</li>
-                            <li>Винтовка болт - мощное оружие</li>
-                            <li>Godmode - бессмертие</li>
-                            <li>Invisible - невидимость</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3>Визуальные функции</h3>
-                        <ul>
-                            <li>No Fog - убрать туман</li>
-                            <li>Wireframe - каркасный режим</li>
-                            <li>Fullbright - яркое освещение</li>
-                            <li>ESP - подсветка игроков</li>
-                            <li>Box ESP - рамки вокруг игроков</li>
-                            <li>Tracers - линии к игрокам</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3>Другие функции</h3>
-                        <ul>
-                            <li>Infinite Jump - бесконечные прыжки</li>
-                            <li>Anti AFK - защита от кика</li>
-                            <li>FPS Boost - оптимизация</li>
-                            <li>Bunny Hop - автопрыжки</li>
-                            <li>Speed Hack - ускорение</li>
-                            <li>Click Delete - удаление объектов</li>
-                            <li>Item Stealer - сбор предметов</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/L4p2gN2CzsA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                
-                <div class="download-section">
-                    <h2>Скачать инжектор</h2>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="copyScriptToClipboard('Gitmoder')">Скопировать Gitmoder</button>
-                        <a href="https://serezanet2.github.io/GitUnlock/LoadFile/" class="btn btn-dark">Скачать Vortex</a>
-                    </div>
-                </div>
-            </div>
+        <div class="initial-content" id="contentDisplay">
+            <!-- Сюда будет загружаться содержимое файла -->
         </div>
     </div>
 
@@ -382,6 +203,27 @@
         let notificationId = 0;
         let deferredPrompt;
         let keyMenuVisible = false;
+
+        // Функция для загрузки содержимого файла
+        function loadTextFile() {
+            fetch('txt.txt')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Файл не найден');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    document.getElementById('contentDisplay').textContent = text;
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки файла:', error);
+                    document.getElementById('contentDisplay').textContent = 'Ошибка загрузки содержимого. Убедитесь, что файл txt.txt существует в той же папке.';
+                });
+        }
+
+        // Загружаем файл при загрузке страницы
+        window.addEventListener('DOMContentLoaded', loadTextFile);
 
         document.getElementById('getKeyBtn').addEventListener('click', function(e) {
             e.stopPropagation();
@@ -411,17 +253,6 @@
         function hideKeyMenu() {
             document.getElementById('keyMenu').classList.remove('active');
             keyMenuVisible = false;
-        }
-
-        function copyScriptToClipboard(scriptType) {
-            let scriptText = 'loadstring(game:HttpGet(\'https://raw.githubusercontent.com/serezanet2/Gitmoder/refs/heads/main/Gitmoder_LOADER\'))()';
-            
-            navigator.clipboard.writeText(scriptText).then(() => {
-                showNotification('Скрипт Gitmoder скопирован в буфер обмена');
-            }).catch(err => {
-                console.error('Ошибка копирования: ', err);
-                showNotification('Ошибка копирования скрипта');
-            });
         }
 
         function showNotification(message) {
